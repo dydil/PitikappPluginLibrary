@@ -1,0 +1,12 @@
+#ifndef PLUGINLIB_GLOBAL_H
+#define PLUGINLIB_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(PITIKAPP_PLUGIN_LIB)
+#  define PITIKAPP_PLUGIN_EXPORT Q_DECL_EXPORT
+#else
+#  define PITIKAPP_PLUGIN_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // PLUGINLIB_GLOBAL_H

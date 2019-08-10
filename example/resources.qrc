@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>com.pitikapp.plugins.example.resources/PluginIcon.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/ModuleIcon.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/Data.qml</file>
+        <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/Parameters.qml</file>
+        <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/icon-delete.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-DiskUsage/ModuleIcon.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/icon-cancel.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/icon-confirm.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-Counter/ModuleIcon.png</file>
+    </qresource>
+</RCC>
