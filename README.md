@@ -1,6 +1,6 @@
 # Pitikapp Plugin Library
 This library can be used to create a plugin for Pitikapp.
-For more information about Pitikapp, visit [pitikapp.com]
+For more information about Pitikapp, visit [pitikapp.com].
 
 [pitikapp.com]: <https://www.pitikapp.com>
 
@@ -8,17 +8,21 @@ For more information about Pitikapp, visit [pitikapp.com]
 
 Anyone with basic programming knowledge in C++ and Qt/QML can create a plugin for Pitikapp.
 
+
 # Definitions
 
 Pitikapp can load user created libraries.
 
 Each library is called a `plugin`.
 All loaded plugins are listed either in the information window or at the left of the screen:
+
 ![N|Solid](https://pitikapp.com/images/plugins/pluginList-Information.png)
+
 ![N|Solid](https://pitikapp.com/images/plugins/pluginList-AddModule.png)
 
 Each plugin is made of one or more `modules`.
 The modules of a plugin are listed either in the information window or at the left of the screen.
+
 ![N|Solid](https://pitikapp.com/images/plugins/moduleList-Information.png)
 ![N|Solid](https://pitikapp.com/images/plugins/moduleList-AddModule.png)
 
@@ -26,58 +30,60 @@ The modules of a plugin are listed either in the information window or at the le
 
 A plugin must be compiled using Qt 5.13.0 MSVC 2017 64 bits.
 
+This version of the library is intented to be used with Pitikapp 1.1.x.
+
 # Global architecture
 
-A plugin is represented by the abstract class `PitikappPlugin`. Each plugin class must have a unique id (e.g. "com.pitikapp.plugin.plugin1").
+A plugin is represented by the abstract class `PitikappPlugin`. Each plugin class must have a unique id (e.g. "com.pitikapp.plugins.example").
 
-The meta-data of a module is represented by the class `PitikappModuleInfo`. A list of `PitikappModuleInfo` can be attached to the `PitikappPlugin` instance. This list is used to show all the modules available for a plugin.
+The meta-data of a module is represented by the class `PitikappModuleInfo`. A list of `PitikappModuleInfo` can be attached to a `PitikappPlugin` object. This list is used to show all the modules available for a plugin.
 
 `PitikappModuleInstance` represents the actual module. It is created upon request from the user.
 
 `PitikappModuleInstanceData` stores all the data necessary for the use of a `PitikappModuleInstance`. This includes the parameters that the user can modify as well as the data that must be displayed in a client.
+
 Each `PitikappModuleInstance` object requires an instance of `PitikappModuleInstanceData`.
 
-Each module instance can use:
-    - A widget for the user to modify the parameters (colors, sizes, ...).
-    - A widget to show data on the client application.
-    - A list of files that can be used in the client (e.g. images).
-All this information is stored in a `PitikappModuleDataInfo` object. A plugin can register several `PitikappModuleDataInfo` types as long as each has a unique ID.
-All resources (QML files, images, ...) of a `PitikappModuleDataInfo` must be embedded in a Qt resource file.
+Each module can use:
+* A widget for the user to modify the parameters (colors, sizes, ...).
+* A widget to show data on the client application.
+* A list of files that can be used in the client (e.g. images).
+
+All this information is stored in a `PitikappModuleDataInfo` object. A plugin can register several `PitikappModuleDataInfo` types as long as each has a unique ID. All resources (QML files, images, ...) of a `PitikappModuleDataInfo` must be embedded in a Qt resource file.
 
 Each `PitikappModuleInstanceData` takes as constructor the ID of a `PitikappModuleDataInfo` that is registered by the plugin.
 
 A module can also use one of the predefined `PitikappModuleInstanceData` classes. For now there is only one available: `PitikappModuleInstanceGaugeData`.
-By using `PitikappModuleInstanceGaugeData` or other predefined classes, a plugin doesn't need to register its own `PitikappModuleDataInfo` type as everything is included.
+By using `PitikappModuleInstanceGaugeData` or other predefined classes, a plugin doesn't need to register its own `PitikappModuleDataInfo` type since everything is included.
 
 
 # How it works
 
 At startup, Pitikapp looks for a shared library file called `plugin.dll` in each sub-directory of `./plugins`.
 
-If the file exists and is a valid shared library it will try to call a function `getPitikappPluginInstance()` that returns a pointer to an object of type `PitikappPlugin`.
+If the file exists and is a valid shared library it will try to load and call a function `getPitikappPluginInstance()` that returns a pointer to an object of type `PitikappPlugin`.
 
-If the file cannot be loaded (for example incompatible architecture or missing dependencies) or if the `getPitikappPluginInstance` symbol is not foun, the plugin is ignored and won't be listed anywhere.
+If the file cannot be loaded (for example incompatible architecture or missing dependencies) or if the `getPitikappPluginInstance` symbol is not found, the plugin is ignored and won't be listed anywhere.
 
 # Example
 
 The attached demo project shows the all the possibilities offered by the plugin library.
 
-Below is a step-by-step explanation of how to create the plugin.
 
-## 1 - Creation of a Pitikapp plugin class
+## 1 Creation of a Pitikapp plugin class
 
 `PitikappPlugin` is an abstract class. `createModuleInstance` must be overriden in a subclass.
 In the example, this class is called `PitikappExamplePlugin`.
 
 The constructor of `PitikappPlugin` takes two parameters:
-    - The ID of the plugin (must be unique globally)
-    - The name of the plugin. This name must be short to fit in all the screens.
+* The ID of the plugin (must be unique globally)
+* The name of the plugin. This name must be short to fit in all the screens.
 ```cpp
 PitikappExamplePlugin::PitikappExamplePlugin() : PitikappPlugin("com.pitikapp.plugins.example", "Example Plugin")
 ```
-The constructor of the plugin object must initialize the meta-data for all plugins and modules.
+The constructor of the plugin object must initialize the meta-data for all the modules.
 
-### 1.1 - Plugin meta-data
+### 1.1 Plugin meta-data
 
 ```cpp
 setValid(true);
@@ -87,13 +93,16 @@ setIcon(QUrl("qrc:/com.pitikapp.plugins.example.resources/PluginIcon.png"));
 ```
 
 An invalid plugin will display a warning sign.
+
 An invisible plugin will not be displayed in the module selection window but still displayed in the information window.
+
 The description text is displayed when selecting the module in the information window.
+
 The icon is used in the module selection window and the information window.
 
 All those properties can be changed at any time and the displayed data will be updated in real time.
 
-### 1.2 - Module data classes
+### 1.2 Module data classes
 
 ```cpp
 registerModuleDataClass(ModuleProcessRunTimeData::ModuleDataInfo());
@@ -101,28 +110,34 @@ registerModuleDataClass(ModuleProcessRunTimeData::ModuleDataInfo());
 
 Register all the data classes that will be used by the modules of this plugin.
 
-If a module will use a predefined data class (such as `PitikappModuleInstanceGaugeData`), it doesn't need to be registered.
+A data class needs to be registered only once in the entire application.
+Most default Pitikapp plugins already use `PitikappModuleInstanceGaugeData` so it doesn't need to be registered, but it won't hurt if it is registered twice.
 
-### 1.3 - Declaration of module meta-data
+### 1.3 Declaration of module meta-data
+
+In the example, two modules are static and one is dynamic. They are declared this way:
 
 ```cpp
-std::list<PitikappModuleInfo> m_moduleInfo;
+PitikappModuleInfo m_processRunTimeModuleInfo;
+PitikappModuleInfo m_counterModuleInfo;
+std::map<QString, std::pair<PitikappModuleInfo, QString>> m_storageModuleInfo;
 
-for (PitikappModuleInfo &moduleInfo : m_moduleInfo)
-{
-    registerModuleClass(&moduleInfo);
-}
+[...]
+
+registerModuleClass(&m_processRunTimeModuleInfo);
+registerModuleClass(&m_counterModuleInfo);
+
 ```
 
-All module meta-data is stored in a vector.
 Note that meta-data must remain valid until the program is shut down. If it is deleted, the module won't be available anymore.
 
 An invalid module will display a warning sign.
+
 An invisible module will not be displayed in the module selection window but still displayed in the information window.
 
 All those properties can be changed at any time and the displayed data will be updated in real time.
 
-### 1.4 - Creation of a module instance
+### 1.4 Creation of a module instance
 
 ```cpp
 PitikappModuleInstance *createModuleInstance(const QString &moduleId) override final;
@@ -135,16 +150,20 @@ The plugin must return a `PitikappModuleInstance` for the given ID. If the ID is
 ```cpp
 PitikappModuleInstance *PitikappExamplePlugin::createModuleInstance(const QString &moduleId)
 {
-    if (MODULE_ID_1 == moduleId)
+    if (MODULE_ID_PROCESS_RUN_TIME == moduleId)
     {
-        return new Module1();
+        return new ModuleProcessRunTime;
+    }
+    else if (MODULE_ID_COUNTER == moduleId)
+    {
+        return new ModuleCounter;
     }
 
     return nullptr;
 }
 ```
 
-### 1.4 - Make the plugin available to the application
+### 1.4 Make the plugin available to the application
 
 The application will look for a symbol `getPitikappPluginInstance` in the loaded library. It will be called once at startup.
 
@@ -164,27 +183,31 @@ extern "C" PitikappPlugin *getPitikappPluginInstance()
 }
 ```
 
-## 2 - Creation of a Pitikapp module class
+## 2 Creation of a Pitikapp module class
 
 A module is composed of several classes:
-    - `PitikappModuleInstance`
-      An object of this type will be created upon request from the user.
+* `PitikappModuleInstance`
 
-    - `PitikappModuleInstanceData`
-      Each `PitikappModuleInstance` object requires an instance of `PitikappModuleInstanceData`.
-      This is the class that stores and display any kind of information and allows the user to modify the parameters.
-      This class can be used by several modules.
-      There are some pre-defined instance data classes.
-      For example, to have a gauge using the same type as the default Pitikapp plugins, PitikappModuleInstanceGaugeData can be used.
+   An object of this type will be created upon request from the user.
+* `PitikappModuleInstanceData`
 
-    - PitikappModuleDataInfo
-      Each `PitikappModuleInstanceData` is linked to a `PitikappModuleDataInfo` class.
-      It will be used by the application to show the correct widgets when necessary.
+  Each `PitikappModuleInstance` object requires an instance of `PitikappModuleInstanceData`.
 
-### 2.1 - Simple module using a predefined data type
+  This is the class that stores and display any kind of information and allows the user to modify the parameters. It can can be used by several modules.
+
+  There are some pre-defined instance data classes. For example, to have a gauge using the same style as the default Pitikapp plugins, `PitikappModuleInstanceGaugeData` can be used.
+
+* `PitikappModuleDataInfo`
+
+  Each `PitikappModuleInstanceData` is linked to a `PitikappModuleDataInfo` class.
+  It will be used by the application to show the correct widgets when necessary.
+
+
+### 2.1 Simple module using a predefined data type
+
 
 `ModuleCounter` is a simple module that shows a counter from 0 to 60 and sends a notification when reaching 60.
-It uses `PitikappModuleInstanceGaugeData` as data type
+It uses `PitikappModuleInstanceGaugeData` as data type.
 
 Default parameters:
 
@@ -221,18 +244,211 @@ See `PitikappExamplePlugin::updateStorageList` for more information.
 
 ### 2.3 Custom module data
 
-`ModuleProcessRunTime` uses a custom data type. This section explains how to get there.
+`ModuleProcessRunTime` uses a custom data type: `ModuleProcessRunTimeData`.
+
+It allows the user to select executables to watch. The client shows for how much time each process has been running and the user can press on an item to kill the process.
+
+
+This section explains how to get there.
 
 #### 2.3.1 - PitikappModuleDataInfo
 
+`ModuleProcessRunTimeData::ModuleDataInfo` defines the files used by `ModuleProcessRunTimeData`.
+
+```cpp
+PitikappModuleDataInfo info(DATA_CLASS_ID);
+```
+
+The ID must be unique. The same ID must be passed to the constructor of `ModuleProcessRunTimeData`.
+
+```cpp
+info.setClientDataDisplayWidgetPath(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-ProcessRunTime/Data.qml"));
+```
+
+This is the file that will be used in the client application to display data to the user.
+
+```cpp
+info.setParameterEditionWidgetPath(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-ProcessRunTime/Parameters.qml"));
+```
+
+This is the file that will be used in the server application to allow the user to modify the parameters of the module instance.
+
+```cpp
+info.addClientFile(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-ProcessRunTime/icon-confirm.png"));
+info.addClientFile(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-ProcessRunTime/icon-cancel.png"));
+```
+
+Those two images are used in the `Data.qml` widget. See below for how to use them.
+
+Finally, the plugin must register this information.
+
+```cpp
+registerModuleDataClass(ModuleProcessRunTimeData::ModuleDataInfo());
+```
+
 #### 2.3.2 - PitikappModuleInstanceData
 
-#### 2.3.4 - PitikappModuleInstance
+`ModuleProcessRunTimeData` translates data in a format that is usable by the `Data` and `Parameters` files (refered to below as "data widget" and "parameter widget").
+
+It attaches a value to a key. The following types of values exist:
+* Client parameters
+
+  Those values are sent to the client and affect the way the information is displayed. They are changed by the user from the parameter widget.
+
+  Example: color of a text.
+
+  A client parameter is defined using `PitikappModuleInstanceData::setClientParameter`.
+* Local parameters
+
+  Those parameters are not used in the client. They are saved locally only.
+
+  Example: the token to login to a service (like Spotify).
+
+  A local parameter is defined using `PitikappModuleInstanceData::setLocalParameter`.
+* Client data
+
+  These are the values that are displayed in the data widget. They are usually changed from the `PitikappModuleInstance` when some events are triggered (like a refresh timer).
+
+  Example: the elapsed time of a process.
+
+  A client data value is defined using `PitikappModuleInstanceData::setClientData`.
+
+It is possible to set a callback that will be triggered whenever any of the above values is modified.
+
+The callback must take as argument a `QString` (the item key) and a `QVariant` (the item value). It is registered using:
+* `PitikappModuleInstanceData::setClientParameterChangeCallback`
+* `PitikappModuleInstanceData::setLocalParameterChangeCallback`
+* `PitikappModuleInstanceData::setClientDataChangeCallback`
+
+#### 2.3.4 - Data storage
+
+All the values mentionned above are stored as a `QVariant` attached to a `QString` key. Custom values type must respect the rules of a `QVariant` when necessary:
+* Declared with `Q_DECLARE_METATYPE`
+* Registered with `qRegisterMetaType`
+* Registered stream operators with `qRegisterMetaTypeStreamOperators`
+
+The keys must be valid OS file names. It means no special characters. If a special character needs to be used, the key can for example be converted to base64 before use.
+Data is stored in a binary format but can be read by any user. Critical information should be encrypted before. Note that a CRC is used, which prevents from manually modifying the data.
+
+#### 2.3.5 Parameter widget
+
+This widget lets the user configure how to display data. It is defined in the declaration of a `PitikappModuleDataInfo`.
+
+```cpp
+info.setParameterEditionWidgetPath(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-ProcessRunTime/Parameters.qml"));
+```
+
+The parameter widget has access to the following objects:
+* moduleClientParameters
+
+  This is a `QQmlPropertyMap`. Setting any value of this object will propagate it to the client.
+
+  Note that `QQmlPropertyMap` doesn't require the key to already exist. Calling `moduleClientParameters.Key = value` is all that is needed.
+* moduleLocalParameters
+
+  This is also a `QQmlPropertyMap`. The key-value pairs assigned to this object are stored locally. They are never propagated to the client.
+* moduleHelpers
+
+  This object gives access to all the custom defined `helper` objects.
+
+  A helper is a `QObject` that is registered using `PitikappModuleInstanceData::addHelper`.
+  It is meant to allow calling complex operations that are not possible using only QML.
+  In the example, `ProcessSelectionHelper` is a helper that reads a path to extract the icon of the selected file. The `selectProcess` function can be called from QML since it is declared `Q_INVOKABLE`.
+
+Before showing the widget, the application calls the method `startEdition` (if it exists). When this function is called, it means all the objects mentionned above are ready to be used. The widget can be initialized with the correct values.
+
+Before hiding the widget, the application calls the method `endEdition`.
+
+In the example, the widget uses those functions to set a flag to tell if the values are ready to be used.
+
+#### 2.3.5 Data widget
+
+This widget shows information to the user. It is defined in the declaration of a `PitikappModuleDataInfo`.
+
+```cpp
+info.setClientDataDisplayWidgetPath(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-ProcessRunTime/Data.qml"));
+```
+
+The data widget has access to the following objects:
+* moduleParameters
+
+  This is a `QQmlPropertyMap` that contains all the values that were set either by assigning a value to a `moduleClientParameters` item in the parameters widget or by calling `PitikappModuleInstanceData::setClientParameter`.
+* moduleData
+
+  This is a `QQmlPropertyMap` that contains all the values that were set by calling `PitikappModuleInstanceData::setClientParameter`.
+
+  It is possible to assign a value to `moduleData`. Doing so will result in the client sending the key-value pair to the server and call `PitikappModuleInstance::processData`. See the section below for more information.
 
 
+Properties of the widget can be bound to any key of those two objects, as long as the key exists at the moment the binding is done.
 
 
-## 3 - Resources
+The data widget also has access to a set of predefined colors that are used by the other widgets in the client. Those colors can be used in order to make a coherent UI where all the colors are similar.
+The colors also automatically update when dark theme is enabled or disabled. The colors are:
+  - `primaryBackground`: The primary background of the application.
+  - `secondaryBackground`: The color of a secondary background in the application.
+  - `applicationForeground`: The color of any widget to display above the background.
+  - `widgetBackground`: The color of the background of the widgets.
+  - `widgetInternalBackground`: The color to use in the background inside every widget.
+  - `buttons`: The color of the buttons.
+  - `notificationText`: The color of the notification text.
+  - `primaryText`: The color of primary texts. To put emphasis on an important text compared to a secondary one.
+  - `secondaryText`: The color of secondary texts.
+
+To bind a property to a color: `color: Colors.widgetInternalBackground`.
+
+If the colors are not enough, it is also possible to read the configuration to see the state of the client.
+
+Example: `property color buttonColor: Configuration.DarkThemeActive? "#899BA6" : "#90A4AE"`.
+
+#### 2.3.4 PitikappModuleInstance
+
+This is the class returned by `PitikappPlugin::createModuleInstance`. The application takes ownership of all the module instances. If `createModuleInstance` returns a null pointer, it will not be usable.
+
+##### Send data
+
+Each module instance takes a `PitikappModuleInstanceData` object as constructor parameter.
+
+When assigning a value to a client data key using `PitikappModuleInstanceData::setClientData`, the key-value pair will be sent to the client application and be usable in the data widget through the `moduleData` object (see 'data widget' section above).
+
+In the example (`ModuleProcessRunTime`), a `QTimer` runs every second to update the run time of the configured processes.
+
+```cpp
+QVector<ProcessData_t> processList = m_data.getConfiguredProcesses();
+
+for (const ProcessData_t &processData : processList)
+{
+    m_data.setProcessExecutionDuration(processData.Id, getProcessRunDuration(processData.Path));
+}
+```
+
+`setProcessExecutionDuration` calls `PitikappModuleInstanceData::setClientData`.
+
+##### Receive data
+
+By assigning any key-value pair to `moduleData`.
+
+```
+MouseArea
+{
+    anchors.fill: parent
+
+    onClicked:
+    {
+        moduleData.Terminate = item_KillProcess.processId;
+        item_KillProcess.visible = false;
+    }
+}
+```
+
+
+Assigning this property will trigger a call to `PitikappModuleInstance::processData`. This function can be overriden by the custom module instance class.
+
+It takes as parameter a `QVariantMap` that contains the key that was assigned in the data widget. In the example, the `Terminate` key contains the ID of the process to be terminated. If the process is found, it will be killed.
+
+## 3 - Miscellaneous information
+
+### 3.1 Resources
 
 All files required by a plugin should be included in a Qt resource file.
 
@@ -242,3 +458,23 @@ Here, all files are stored in a folder `com.pitikapp.plugins.example.resources` 
 About image format:
  - A plugin icon should be an image with a transparent background.
  - A module icon should be a black image with transparent background.
+
+### 3.2 Logging
+
+If debug mode is enabled in the application settings (client or server), it is possible to use `QDebug` to log information.
+
+The C++ code can use `qDebug()`, `qInfo()`, etc. while the QML code can use `console.info()`, `console.debug()`, etc.
+
+When debug mode is enabled, the server can request to download the client's logs by clicking on the device name in the top bar.
+
+All the logs can be found in `%LOCALAPPDATA%\Pitikapp Remote Dashboard`.
+
+### 3.3 Available QML modules
+
+Not all QML modules are currently available, as it would take too much space on the disk.
+Send us an email if you think a new module should be available.
+
+### 3.4 Contact
+
+To ask a question, report a bug, show your plugin, send a suggestion, contact us at contact@pitikapp.com!
+

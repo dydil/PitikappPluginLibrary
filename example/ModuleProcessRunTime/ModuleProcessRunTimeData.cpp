@@ -9,9 +9,6 @@ namespace
     // Class ID
     const QString DATA_CLASS_ID = QStringLiteral("com.pitikapp.plugins.example.ModuleProcessRunTime.data");
 
-    // Local parameter keys
-    const QString LOCAL_PARAMETER_KEY_NOTIFICATIONS = QStringLiteral("Notifications");
-
     // Client paramenter keys
     const QString CLIENT_PARAMETER_KEY_PROCESS_DATA = QStringLiteral("ProcessList");
     const QString CLIENT_PARAMETER_KEY_SHOW_NAMES   = QStringLiteral("ShowNames");
@@ -72,8 +69,6 @@ ModuleProcessRunTimeData::ModuleProcessRunTimeData() : PitikappModuleInstanceDat
     // If this is not done, there will be many "Undefined property" warnings when a widget
     // is created for this module.
     // ---------------------------------------------------------------------------------------------
-    // Local
-    setLocalParameter(LOCAL_PARAMETER_KEY_NOTIFICATIONS, QVariantMap{});
     // Client
     setClientParameter(CLIENT_PARAMETER_KEY_PROCESS_DATA, QVariantList());
     setClientParameter(CLIENT_PARAMETER_KEY_SHOW_NAMES, false);
