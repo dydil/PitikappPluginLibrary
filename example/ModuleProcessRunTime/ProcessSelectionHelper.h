@@ -1,5 +1,4 @@
-#ifndef PROCESSSELECTIONHELPER_H
-#define PROCESSSELECTIONHELPER_H
+#pragma once
 
 #include <QObject>
 
@@ -25,5 +24,3 @@ class ProcessSelectionHelper : public QObject
         void processRemoved(const QString &processId);
         void processNameChanged(const QString &processId, const QString &processName);
 };
-
-#endif // PROCESSSELECTIONHELPER_H

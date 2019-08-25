@@ -8,8 +8,10 @@
 
 #include <QDebug>
 #include <QDateTime>
-#include <QTimeZone>
 
+// -------------------------------------------------------------------------------------------------
+// Functions wrapping around Windows API to manage process data.
+// -------------------------------------------------------------------------------------------------
 namespace
 {
     QString formatDuration(int milliseconds)
@@ -157,6 +159,9 @@ ModuleProcessRunTime::ModuleProcessRunTime() : PitikappModuleInstance(&m_data)
     m_updateTimer.start(1000);
 }
 
+// -------------------------------------------------------------------------------------------------
+// This function is called when a value is assigned to any property of 'moduleData' in the client.
+// -------------------------------------------------------------------------------------------------
 void ModuleProcessRunTime::processData(const QVariantMap &data)
 {
     QVector<ProcessData_t> processList = m_data.getConfiguredProcesses();

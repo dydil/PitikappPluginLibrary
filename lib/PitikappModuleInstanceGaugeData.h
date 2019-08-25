@@ -25,7 +25,7 @@ Q_DECLARE_METATYPE(PitikappGaugeDisplayTextFormat_e)
 *******************************************************************************************/
 enum class PitikappGaugeType_e
 {
-    eGaugeType_Bar,    /// Show a vertical or horizontal bar.
+    eGaugeType_Bar,    /// Show a vertical bar.
     eGaugeType_Circle, /// Show a circle.
 };
 Q_DECLARE_METATYPE(PitikappGaugeType_e)

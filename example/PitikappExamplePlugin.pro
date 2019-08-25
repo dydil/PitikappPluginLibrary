@@ -1,16 +1,22 @@
-#-------------------------------------------------
+#---------------------------------------------
 # This is an example of a plugin for Pitikapp.
-#-------------------------------------------------
+#---------------------------------------------
 
 PLUGIN_NAME = PitikappExamplePlugin
 
+# --------------------------------------------
 # The project must be a library.
+# --------------------------------------------
 TEMPLATE = lib
 
+# --------------------------------------------
 # Required for QFileIconProvider
+# --------------------------------------------
 QT += widgets
 
+# --------------------------------------------
 # The name must always be "plugin".
+# --------------------------------------------
 TARGET = plugin
 
 QMAKE_CXXFLAGS += /std:c++latest
@@ -31,12 +37,23 @@ HEADERS += \
         ModuleDiskUsage/ModuleDiskUsage.h \
         PitikappExamplePlugin.h
 
+# -----------------------------------------------------------------------------------------
+# This include file automatically links to the library and adds the required include paths.
+# -----------------------------------------------------------------------------------------
 include($$PWD/../lib/PitikappPluginLibrary.pri)
 
+# ---------------------------------------------------------------------------------------
 # Point to your Pitikapp installation plugin directory.
+# Using a symlink makes it easier.
+# By default, it would be:
+# DESTDIR=C:/Users/UserName/AppData/Local/Pitikapp Remote Dashboard/plugins/$$PLUGIN_NAME
+# -----------------------------------------------------------------------------------------
 DESTDIR=$$PWD/../../Pitikapp/bin/plugins/$$PLUGIN_NAME
 
 RESOURCES += \
     resources.qrc
 
+# --------------------------------------------
+# Lib required for some Windows.h functions.
+# --------------------------------------------
 LIBS += -lUser32

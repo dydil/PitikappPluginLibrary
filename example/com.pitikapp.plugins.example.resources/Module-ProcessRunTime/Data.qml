@@ -4,11 +4,17 @@ import QtQuick.Window 2.3
 import QtGraphicalEffects 1.0
 
 Item {
-    readonly property int  __itemHeight: Math.min(Screen.height, Screen.width) / 40
+    // The height of each line is based on the screen size.
+    // Math.min(Window.height, Window.width) is used to make sure an item has the same size whether the device is horizontal or vertical.
+    // Also, if only the height is used it could look too small when the device is horizontal.
+    readonly property int  __itemHeight: Math.min(Window.height, Window.width) / 10
 
     id: root
 
-    // Alignment values
+    // ------------------------------------------------------------------
+    // Alignment values.
+    // The enum must match ProcessAlignment in the data class definition.
+    // ------------------------------------------------------------------
     enum ListAlignment {
         NoAlignment,
         AlignTop,
@@ -21,6 +27,10 @@ Item {
     {
         anchors.fill: parent
 
+        // -------------------------------------------------------------------------------------------
+        // Using one of the predefined colors, the background color is automatically updated when dark
+        // theme is enabled or disabled. It also ensure all modules have a similar appearance.
+        // -------------------------------------------------------------------------------------------
         color: Colors.widgetBackground
     }
 
@@ -32,6 +42,9 @@ Item {
 
         spacing: 0
 
+        // ------------------------------------------------------------------------
+        // Spacer to align according to the "Alignment" parameter.
+        // ------------------------------------------------------------------------
         Item
         {
             Layout.fillHeight: true
@@ -39,8 +52,14 @@ Item {
             visible: (moduleParameters.Alignment === Data.AlignBottom) || (moduleParameters.Alignment === Data.AlignCenter)
         }
 
+        // ------------------------------------------------------------------------
+        // Each item of the ProcessList parameter is inserted into a column layout.
+        // ------------------------------------------------------------------------
         Repeater
         {
+            // ------------------------------------------------------------------------
+            // The model is provided by PitikappModuleInstanceData::setClientParameter.
+            // ------------------------------------------------------------------------
             model: moduleParameters.ProcessList
 
             Item
@@ -55,6 +74,7 @@ Item {
                     anchors.fill: parent
 
                     // Spacer
+                    // To let a margin on the left.
                     Item
                     {
                         Layout.fillWidth: true
@@ -70,6 +90,12 @@ Item {
                         Layout.maximumWidth: __itemHeight
                         Layout.minimumWidth: __itemHeight
 
+                        // --------------------------------------------------------------------
+                        // The source is a base64 encoded image.
+                        // See convertImageToDisplayableBase64() in ProcessSelectionHelper.cpp.
+                        // For now it is not possible to transfer images so this is the standard
+                        // way. It is also possible to use URLs.
+                        // --------------------------------------------------------------------
                         source: modelData.Icon
                     }
 
@@ -79,13 +105,24 @@ Item {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
 
+                        // ---------------------------------------------------------------------------
+                        // Parameters are defined with PitikappModuleInstanceData::setClientParameter.
+                        // They can directly be bound to widget properties.
+                        // ---------------------------------------------------------------------------
                         visible: moduleParameters.ShowNames
 
-                        text: modelData.Name
+                        // ----------------------------------------------------------------------------
+                        // Using one of the predefined colors, the text color is automatically updated
+                        // depending on the device configuration. It also ensures all the modules have
+                        // a similar appearance.
+                        // ----------------------------------------------------------------------------
                         color: Colors.primaryText
+
+                        text: modelData.Name
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignLeft
                         elide: Text.ElideRight
+                        font.pixelSize: __itemHeight / 2
                     }
 
                     // Time
@@ -94,14 +131,22 @@ Item {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
 
+                        // ------------------------------------------------------------------------------------------------
+                        // This value is defined using PitikappModuleInstanceData::setClientData.
+                        // Note that a QVariantMap doesn't notify when one of its values changes, so the whole map
+                        // is updated every time.
+                        // The map keys can be accessed like a regular map and the value can be bound to widget properties.
+                        // ------------------------------------------------------------------------------------------------
                         text: moduleData.ProcessRunTime[modelData.ID]
 
                         color: Colors.primaryText
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignRight
+                        font.pixelSize: __itemHeight / 2
                     }
 
                     // Spacer
+                    // To let a margin on the right.
                     Item
                     {
                         Layout.fillWidth: true
@@ -122,6 +167,9 @@ Item {
             }
         }
 
+        // ------------------------------------------------------------------------
+        // Spacer to align according to the "Alignment" parameter.
+        // ------------------------------------------------------------------------
         Item
         {
             Layout.fillHeight: true
@@ -197,6 +245,11 @@ Item {
                 }
             }
 
+            // --------------------------------------------------------------------------------------------------------------
+            // We want the button color to be consistent when the dark theme is used.
+            // Instead of having two icons, use a ColorOverlay applied to the button  and using one of the predefined colors.
+            // Colors.buttons is automatically updated when dark theme is enabled or disabled.
+            // --------------------------------------------------------------------------------------------------------------
             ColorOverlay
             {
                 anchors.fill: parent.children[0]
@@ -232,6 +285,10 @@ Item {
 
                     onClicked:
                     {
+                        // ---------------------------------------------------------------------------------
+                        // Setting the value of a moduleData key instead of reading it will trigger a call
+                        // to PitikappModuleInstance::processData which can be overriden in a custom module.
+                        // ---------------------------------------------------------------------------------
                         moduleData.Terminate = item_KillProcess.processId;
                         item_KillProcess.visible = false;
                     }

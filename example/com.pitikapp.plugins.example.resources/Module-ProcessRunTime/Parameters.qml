@@ -7,8 +7,6 @@ import QtQuick.Window 2.3
 
 Item
 {
-    property var processList: __ready? moduleClientParameters.ProcessList : null
-
              property bool __ready     : false
     readonly property int  __itemHeight: Math.min(Screen.height, Screen.width) / 40
 
@@ -38,7 +36,7 @@ Item
             spacing: 0
             Repeater
             {
-                model: processList
+                model: moduleClientParameters.ProcessList
 
                 Item
                 {
@@ -232,7 +230,10 @@ Item
 
                     onCurrentIndexChanged:
                     {
-                        moduleClientParameters.Alignment = currentIndex;
+                        if (__ready)
+                        {
+                            moduleClientParameters.Alignment = currentIndex;
+                        }
                     }
                 }
 

@@ -248,8 +248,9 @@ See `PitikappExamplePlugin::updateStorageList` for more information.
 
 It allows the user to select executables to watch. The client shows for how much time each process has been running and the user can press on an item to kill the process.
 
-
 This section explains how to get there.
+
+The module is not perfect, it is just mean to demonstrate the possibilities. For example if there are multiple instances of a program running, the first one encountered in the process list will be used.
 
 #### 2.3.1 - PitikappModuleDataInfo
 
@@ -356,12 +357,17 @@ The parameter widget has access to the following objects:
   In the example, `ProcessSelectionHelper` is a helper that reads a path to extract the icon of the selected file. The `selectProcess` function can be called from QML since it is declared `Q_INVOKABLE`.
 
 Before showing the widget, the application calls the method `startEdition` (if it exists). When this function is called, it means all the objects mentionned above are ready to be used. The widget can be initialized with the correct values.
+It is also possible to use the `onVisibleChanged` method.
 
 Before hiding the widget, the application calls the method `endEdition`.
 
 In the example, the widget uses those functions to set a flag to tell if the values are ready to be used.
 
-#### 2.3.5 Data widget
+**Important note**: some properties can change when the widget is hidden so it is important to ensure the widget is visible before changing a property.
+
+In the example, the `onCurrentIndexChanged` method of `combobox_Alignment` is called with value 0 when the widget is being hidden. Without checking `if (__ready)` first, the alignment always returns to 0 (none) when hiding.
+
+#### 2.3.6 Data widget
 
 This widget shows information to the user. It is defined in the declaration of a `PitikappModuleDataInfo`.
 
@@ -474,7 +480,11 @@ All the logs can be found in `%LOCALAPPDATA%\Pitikapp Remote Dashboard`.
 Not all QML modules are currently available, as it would take too much space on the disk.
 Send us an email if you think a new module should be available.
 
-### 3.4 Contact
+### 3.4 Localisation
+
+Pitikapp is currently available only in English, so the plugins cannot be translated for now.
+
+### 3.5 Contact
 
 To ask a question, report a bug, show your plugin, send a suggestion, contact us at contact@pitikapp.com!
 

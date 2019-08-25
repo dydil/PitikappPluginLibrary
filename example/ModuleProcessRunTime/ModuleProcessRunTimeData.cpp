@@ -66,10 +66,9 @@ ModuleProcessRunTimeData::ModuleProcessRunTimeData() : PitikappModuleInstanceDat
 {
     // ---------------------------------------------------------------------------------------------
     // Assign a default value to all parameters.
-    // If this is not done, there will be many "Undefined property" warnings when a widget
+    // If this is not done, there will be many "Undefined property" warnings the first time a widget
     // is created for this module.
     // ---------------------------------------------------------------------------------------------
-    // Client
     setClientParameter(CLIENT_PARAMETER_KEY_PROCESS_DATA, QVariantList());
     setClientParameter(CLIENT_PARAMETER_KEY_SHOW_NAMES, false);
     setClientParameter(CLIENT_PARAMETER_KEY_ALIGNMENT, NoAlignment);
@@ -97,9 +96,9 @@ ModuleProcessRunTimeData::ModuleProcessRunTimeData() : PitikappModuleInstanceDat
                      std::bind(&ModuleProcessRunTimeData::onProcessNameChanged, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-// ---------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // Static function to return all necessary information for this data type.
-// ---------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 PitikappModuleDataInfo ModuleProcessRunTimeData::ModuleDataInfo()
 {
     PitikappModuleDataInfo info(DATA_CLASS_ID);
@@ -115,6 +114,9 @@ PitikappModuleDataInfo ModuleProcessRunTimeData::ModuleDataInfo()
     return info;
 }
 
+// -------------------------------------------------------------------------------------------------
+// Read the saved local parameter as a QVariantList and convert it to the custom type.
+// -------------------------------------------------------------------------------------------------
 QVector<ProcessData_t> ModuleProcessRunTimeData::getConfiguredProcesses() const
 {
     QVariantList processDataListVariant = getClientParameter(CLIENT_PARAMETER_KEY_PROCESS_DATA).toList();
@@ -130,17 +132,26 @@ QVector<ProcessData_t> ModuleProcessRunTimeData::getConfiguredProcesses() const
     return processDataList;
 }
 
+// -------------------------------------------------------------------------------------------------
+// Update the client data.
+// Note that changing the individual keys of a QVariantMap doesn't trigger a property change in QML.
+// Here the whole data is changed, to be sure the QML widget will be notified.
+// -------------------------------------------------------------------------------------------------
 void ModuleProcessRunTimeData::setProcessExecutionDuration(const QString &processId, const QString &formattedDuration)
 {
     QVariantMap processData = getClientData(CLIENT_DATA_KEY_RUN_TIME).toMap();
 
     bool modified = false;
 
+    // Don't bother sending the data if it hasn't changed.
     auto iterator = processData.find(processId);
-    if ((iterator != processData.end()) && (iterator.value().toString() != formattedDuration))
+    if (iterator != processData.end())
     {
-        iterator.value() = formattedDuration;
-        modified = true;
+        if ((iterator.value().toString() != formattedDuration))
+        {
+            iterator.value() = formattedDuration;
+            modified = true;
+        }
     }
     else
     {
@@ -154,6 +165,10 @@ void ModuleProcessRunTimeData::setProcessExecutionDuration(const QString &proces
     }
 }
 
+// -------------------------------------------------------------------------------------------------
+// This function is triggered by the helper, when the user selected an executable.
+// It refreshes the parameters to take into account the new executable.
+// -------------------------------------------------------------------------------------------------
 void ModuleProcessRunTimeData::onProcessSelected(const ProcessData_t &processData)
 {
     qInfo() << "Process selected:" << processData.Path;
@@ -165,6 +180,10 @@ void ModuleProcessRunTimeData::onProcessSelected(const ProcessData_t &processDat
     setClientParameter(CLIENT_PARAMETER_KEY_PROCESS_DATA, processDataList);
 }
 
+// -------------------------------------------------------------------------------------------------
+// This function is triggered by the helper, when the user wants to delete an executable.
+// It refreshes the parameters to remove the executable from the list..
+// -------------------------------------------------------------------------------------------------
 void ModuleProcessRunTimeData::onProcessRemoved(const QString &processId)
 {
     QVariantList processDataList = getClientParameter(CLIENT_PARAMETER_KEY_PROCESS_DATA).toList();
@@ -186,6 +205,10 @@ void ModuleProcessRunTimeData::onProcessRemoved(const QString &processId)
     }
 }
 
+// -------------------------------------------------------------------------------------------------
+// This function is triggered by the helper, when the user selected an executable.
+// It refreshes the parameters to take into account the new executable.
+// -------------------------------------------------------------------------------------------------
 void ModuleProcessRunTimeData::onProcessNameChanged(const QString &processId, const QString &newName)
 {
     QVariantList processDataList = getClientParameter(CLIENT_PARAMETER_KEY_PROCESS_DATA).toList();

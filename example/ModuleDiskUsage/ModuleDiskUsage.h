@@ -15,5 +15,5 @@ class ModuleDiskUsage : public PitikappModuleInstance
 
         QTimer m_updateTimer;
         PitikappModuleInstanceGaugeData m_data;
-        QString m_rootPath;;
+        QString m_rootPath;
 };

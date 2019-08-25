@@ -1,5 +1,4 @@
-#ifndef MODULECOUNTER_H
-#define MODULECOUNTER_H
+#pragma once
 
 #include <QTimer>
 
@@ -18,5 +17,3 @@ class ModuleCounter : public PitikappModuleInstance
         QTimer m_updateTimer;
         PitikappModuleInstanceGaugeData m_data;
 };
-
-#endif // MODULECOUNTER_H
