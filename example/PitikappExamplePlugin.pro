@@ -10,9 +10,9 @@ PLUGIN_NAME = PitikappExamplePlugin
 TEMPLATE = lib
 
 # --------------------------------------------
-# Required for QFileIconProvider
+# widgets required for QFileIconProvider
 # --------------------------------------------
-QT += widgets
+QT += widgets qml
 
 # --------------------------------------------
 # The name must always be "plugin".
@@ -48,7 +48,7 @@ include($$PWD/../lib/PitikappPluginLibrary.pri)
 # By default, it would be:
 # DESTDIR=C:/Users/UserName/AppData/Local/Pitikapp Remote Dashboard/plugins/$$PLUGIN_NAME
 # -----------------------------------------------------------------------------------------
-DESTDIR=$$PWD/../../Pitikapp/bin/plugins/$$PLUGIN_NAME
+DESTDIR="C:/Users/UserName/AppData/Local/Pitikapp Remote Dashboard/plugins/$$PLUGIN_NAME"
 
 RESOURCES += \
     resources.qrc
