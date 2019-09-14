@@ -48,7 +48,7 @@ include($$PWD/../lib/PitikappPluginLibrary.pri)
 # By default, it would be:
 # DESTDIR=C:/Users/UserName/AppData/Local/Pitikapp Remote Dashboard/plugins/$$PLUGIN_NAME
 # -----------------------------------------------------------------------------------------
-DESTDIR="C:/Users/UserName/AppData/Local/Pitikapp Remote Dashboard/plugins/$$PLUGIN_NAME"
+DESTDIR=$$PWD/$$PLUGIN_NAME
 
 RESOURCES += \
     resources.qrc
