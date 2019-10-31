@@ -252,7 +252,7 @@ This section explains how to get there.
 
 The module is not perfect, it is just mean to demonstrate the possibilities. For example if there are multiple instances of a program running, the first one encountered in the process list will be used.
 
-#### 2.3.1 - PitikappModuleDataInfo
+#### 2.3.1 PitikappModuleDataInfo
 
 `ModuleProcessRunTimeData::ModuleDataInfo` defines the files used by `ModuleProcessRunTimeData`.
 
@@ -287,7 +287,7 @@ Finally, the plugin must register this information.
 registerModuleDataClass(ModuleProcessRunTimeData::ModuleDataInfo());
 ```
 
-#### 2.3.2 - PitikappModuleInstanceData
+#### 2.3.2 PitikappModuleInstanceData
 
 `ModuleProcessRunTimeData` translates data in a format that is usable by the `Data` and `Parameters` files (refered to below as "data widget" and "parameter widget").
 
@@ -321,7 +321,7 @@ The callback must take as argument a `QString` (the item key) and a `QVariant` (
 * `PitikappModuleInstanceData::setLocalParameterChangeCallback`
 * `PitikappModuleInstanceData::setClientDataChangeCallback`
 
-#### 2.3.4 - Data storage
+#### 2.3.3 Data storage
 
 All the values mentionned above are stored as a `QVariant` attached to a `QString` key. Custom values type must respect the rules of a `QVariant` when necessary:
 * Declared with `Q_DECLARE_METATYPE`
@@ -331,7 +331,7 @@ All the values mentionned above are stored as a `QVariant` attached to a `QStrin
 The keys must be valid OS file names. It means no special characters. If a special character needs to be used, the key can for example be converted to base64 before use.
 Data is stored in a binary format but can be read by any user. Critical information should be encrypted before. Note that a CRC is used, which prevents from manually modifying the data.
 
-#### 2.3.5 Parameter widget
+#### 2.3.4 Parameter widget
 
 This widget lets the user configure how to display data. It is defined in the declaration of a `PitikappModuleDataInfo`.
 
@@ -367,7 +367,7 @@ In the example, the widget uses those functions to set a flag to tell if the val
 
 In the example, the `onCurrentIndexChanged` method of `combobox_Alignment` is called with value 0 when the widget is being hidden. Without checking `if (__ready)` first, the alignment always returns to 0 (none) when hiding.
 
-#### 2.3.6 Data widget
+#### 2.3.5 Data widget
 
 This widget shows information to the user. It is defined in the declaration of a `PitikappModuleDataInfo`.
 
@@ -407,7 +407,7 @@ If the colors are not enough, it is also possible to read the configuration to s
 
 Example: `property color buttonColor: Configuration.DarkThemeActive? "#899BA6" : "#90A4AE"`.
 
-#### 2.3.4 PitikappModuleInstance
+#### 2.3.6 PitikappModuleInstance
 
 This is the class returned by `PitikappPlugin::createModuleInstance`. The application takes ownership of all the module instances. If `createModuleInstance` returns a null pointer, it will not be usable.
 
@@ -451,6 +451,69 @@ MouseArea
 Assigning this property will trigger a call to `PitikappModuleInstance::processData`. This function can be overriden by the custom module instance class.
 
 It takes as parameter a `QVariantMap` that contains the key that was assigned in the data widget. In the example, the `Terminate` key contains the ID of the process to be terminated. If the process is found, it will be killed.
+
+### 2.4 Custom module embedding a predefined data type
+_This is available in Pitikapp 1.1.1_.
+
+It is also possible to use a predefined data type  but to customize it with addition parameters.
+
+`ModuleCustomCounter` is similar to `ModuleCounter` but it allows entering a custom value for the counter instead of the default value of 60.
+
+To make a widget available to all other plugins, use `qmlRegisterType`. For example:
+
+```cpp
+qmlRegisterType(QUrl("qrc:/widgetPath"), "com.pitikapp.plugin.widgets", 1, 0, "PitikappGaugeWidget");
+```
+
+This will allow any widget to import `com.pitikapp.plugin.widgets` to declare an instance of `PitikappGaugeWidget`. The widget must be registered before being used anywhere, for example in the plugin constructor.
+
+### 2.4.1 PitikappModuleInstanceData
+
+`ModuleCustomCounterData` inherits `PitikappModuleInstanceGaugeData` in order to use the features of `PitikappModuleInstanceGaugeData`. It must however be distinct from `PitikappModuleInstanceGaugeData`, which means it must use its own ID. This ID is given to the constructor of `PitikappModuleInstanceGaugeData`.
+
+### 2.4.2 PitikappModuleDataInfo
+
+The `PitikappModuleDataInfo` attached to `ModuleCustomCounterData` must copy the values from the `PitikappModuleDataInfo` of `PitikappModuleInstanceGaugeData`.
+
+```cpp
+PitikappModuleDataInfo ModuleCustomCounterData::ModuleDataInfo()
+{
+    PitikappModuleDataInfo dataInfo(DATA_CLASS_ID);
+    dataInfo.setParameterEditionWidgetPath(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-CustomCounter/Parameters.qml"));
+    dataInfo.setClientDataDisplayWidgetPath(PitikappModuleInstanceGaugeData::ModuleDataInfo().getClientDataDisplayWidgetPath());
+
+    return dataInfo;
+}
+```
+
+### 2.4.3 Parameter widget
+
+The parameter widget must embed the parameter widget of `PitikappModuleInstanceGaugeData`. See `com.pitikapp.plugins.example.resources/Module-CustomCounter/Parameters.qml`.
+
+The widget must initialize the `PitikappGaugeWidget` in order to properly load the current gauge parameter values:
+
+```
+function startEdition()
+{
+    combobox_ValueNames.spinbox_CounterMaxValue = moduleLocalParameters.CounterMaxValue;
+    widget_Gauge.startEdition();
+}
+
+function endEdition()
+{
+    widget_Gauge.endEdition();
+}
+```
+
+Use a local parameter callback to detect when the max value changes. When it changes, update the gauge parameters:
+```
+m_data.setParameter(PitikappGaugeParameter_e::MaxValue, value);
+```
+
+### 2.4.4 Data widget
+
+The data widget cannot be customized. The default one will be used.
+
 
 ## 3 - Miscellaneous information
 
