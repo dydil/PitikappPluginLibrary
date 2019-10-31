@@ -327,6 +327,7 @@ All the values mentionned above are stored as a `QVariant` attached to a `QStrin
 * Declared with `Q_DECLARE_METATYPE`
 * Registered with `qRegisterMetaType`
 * Registered stream operators with `qRegisterMetaTypeStreamOperators`
+* Registered comparison operators with `QMetaType::registerComparators`
 
 The keys must be valid OS file names. It means no special characters. If a special character needs to be used, the key can for example be converted to base64 before use.
 Data is stored in a binary format but can be read by any user. Critical information should be encrypted before. Note that a CRC is used, which prevents from manually modifying the data.
