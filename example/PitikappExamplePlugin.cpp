@@ -6,12 +6,14 @@
 #include "ModuleProcessRunTime/ModuleProcessRunTime.h"
 #include "ModuleDiskUsage/ModuleDiskUsage.h"
 #include "ModuleCounter/ModuleCounter.h"
+#include "ModuleCustomCounter/ModuleCustomCounter.h"
 
 namespace
 {
     const QString MODULE_ID_PROCESS_RUN_TIME = QStringLiteral("com.pitikapp.plugins.example.module1");
     const QString MODULE_ID_DISK_USAGE       = QStringLiteral("com.pitikapp.plugins.example.module2");
     const QString MODULE_ID_COUNTER          = QStringLiteral("com.pitikapp.plugins.example.module3");
+    const QString MODULE_ID_CUSTOM_COUNTER   = QStringLiteral("com.pitikapp.plugins.example.module4");
 
     PitikappExamplePlugin *Instance = nullptr;
 
@@ -35,7 +37,8 @@ extern "C" PitikappPlugin *getPitikappPluginInstance()
 PitikappExamplePlugin::PitikappExamplePlugin() :
     PitikappPlugin("com.pitikapp.plugins.example", "Example Plugin"),
     m_processRunTimeModuleInfo(MODULE_ID_PROCESS_RUN_TIME, "Process Run Time"),
-    m_counterModuleInfo(MODULE_ID_COUNTER, "Counter")
+    m_counterModuleInfo(MODULE_ID_COUNTER, "Counter"),
+    m_customCounterModuleInfo(MODULE_ID_CUSTOM_COUNTER, "Custom Counter")
 {
     // ------------------------------------------
     //  Init plugin data
@@ -49,6 +52,7 @@ PitikappExamplePlugin::PitikappExamplePlugin() :
     //  Register data classes.
     // ------------------------------------------
     registerModuleDataClass(ModuleProcessRunTimeData::ModuleDataInfo());
+    registerModuleDataClass(ModuleCustomCounterData::ModuleDataInfo());
 
     // ------------------------------------------
     //  Register module meta-data.
@@ -59,6 +63,12 @@ PitikappExamplePlugin::PitikappExamplePlugin() :
     m_counterModuleInfo.setDescription("Counter that goes from 0 to 60.");
     m_counterModuleInfo.setIcon(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-Counter/ModuleIcon.png"));
     registerModuleClass(&m_counterModuleInfo);
+    // ----- Custom counter
+    m_customCounterModuleInfo.setVisible(true);
+    m_customCounterModuleInfo.setValid(true);
+    m_customCounterModuleInfo.setDescription("Counter that goes from 0 to a custom value.");
+    m_customCounterModuleInfo.setIcon(QUrl("qrc:/com.pitikapp.plugins.example.resources/Module-CustomCounter/ModuleIcon.png"));
+    registerModuleClass(&m_customCounterModuleInfo);
     // ----- Process Run Time
     m_processRunTimeModuleInfo.setVisible(true);
     m_processRunTimeModuleInfo.setValid(true);
@@ -87,6 +97,10 @@ PitikappModuleInstance *PitikappExamplePlugin::createModuleInstance(const QStrin
     else if (MODULE_ID_COUNTER == moduleId)
     {
         return new ModuleCounter;
+    }
+    else if (MODULE_ID_CUSTOM_COUNTER == moduleId)
+    {
+        return new ModuleCustomCounter;
     }
     else if (auto iterator = m_storageModuleInfo.find(moduleId) ; iterator != m_storageModuleInfo.end())
     {

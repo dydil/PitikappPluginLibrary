@@ -20,5 +20,6 @@ class PitikappExamplePlugin : public PitikappPlugin
         QTimer m_updateStorageTimer;
         PitikappModuleInfo m_processRunTimeModuleInfo;
         PitikappModuleInfo m_counterModuleInfo;
+        PitikappModuleInfo m_customCounterModuleInfo;
         std::map<QString, std::pair<PitikappModuleInfo, QString>> m_storageModuleInfo;
 };

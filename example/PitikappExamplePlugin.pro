@@ -12,7 +12,7 @@ TEMPLATE = lib
 # --------------------------------------------
 # widgets required for QFileIconProvider
 # --------------------------------------------
-QT += widgets qml
+QT += core widgets qml
 
 # --------------------------------------------
 # The name must always be "plugin".
@@ -23,6 +23,8 @@ QMAKE_CXXFLAGS += /std:c++latest
 
 SOURCES += \
         ModuleCounter/ModuleCounter.cpp \
+        ModuleCustomCounter/ModuleCustomCounter.cpp \
+        ModuleCustomCounter/ModuleCustomCounterData.cpp \
         ModuleProcessRunTime/ModuleProcessRunTime.cpp \
         ModuleProcessRunTime/ModuleProcessRunTimeData.cpp \
         ModuleProcessRunTime/ProcessSelectionHelper.cpp \
@@ -31,6 +33,8 @@ SOURCES += \
 
 HEADERS += \
         ModuleCounter/ModuleCounter.h \
+        ModuleCustomCounter/ModuleCustomCounter.h \
+        ModuleCustomCounter/ModuleCustomCounterData.h \
         ModuleProcessRunTime/ModuleProcessRunTime.h \
         ModuleProcessRunTime/ModuleProcessRunTimeData.h \
         ModuleProcessRunTime/ProcessSelectionHelper.h \

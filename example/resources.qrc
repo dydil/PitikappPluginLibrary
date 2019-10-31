@@ -9,5 +9,7 @@
         <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/icon-cancel.png</file>
         <file>com.pitikapp.plugins.example.resources/Module-ProcessRunTime/icon-confirm.png</file>
         <file>com.pitikapp.plugins.example.resources/Module-Counter/ModuleIcon.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-CustomCounter/ModuleIcon.png</file>
+        <file>com.pitikapp.plugins.example.resources/Module-CustomCounter/Parameters.qml</file>
     </qresource>
 </RCC>
