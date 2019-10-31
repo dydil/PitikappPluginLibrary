@@ -59,6 +59,8 @@ class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceData
         void setDisplayTitleEditable(bool editable);
         bool isDisplayTitleEditable();
 
+        void setLocalTitle(const QString &title);
+
     private:
         std::unique_ptr<PitikappModuleInstanceDataPrivate> data;
 };

@@ -71,6 +71,7 @@ class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceGaugeData : public PitikappMo
 {
     public:
         PitikappModuleInstanceGaugeData();
+        explicit PitikappModuleInstanceGaugeData(const QString &id);
         ~PitikappModuleInstanceGaugeData() override = default;
 
         static PitikappModuleDataInfo ModuleDataInfo();
