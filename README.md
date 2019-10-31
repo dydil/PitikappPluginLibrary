@@ -495,7 +495,7 @@ The widget must initialize the `PitikappGaugeWidget` in order to properly load t
 ```
 function startEdition()
 {
-    combobox_ValueNames.spinbox_CounterMaxValue = moduleLocalParameters.CounterMaxValue;
+    spinbox_CounterMaxValue.value = moduleLocalParameters.CounterMaxValue;
     widget_Gauge.startEdition();
 }
 
