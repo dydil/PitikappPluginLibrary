@@ -25,10 +25,25 @@ Q_DECLARE_METATYPE(PitikappGaugeDisplayTextFormat_e)
 *******************************************************************************************/
 enum class PitikappGaugeType_e
 {
-    eGaugeType_Bar,    /// Show a vertical bar.
+    eGaugeType_Bar,    /// Show a horizontal or vertical bar.
     eGaugeType_Circle, /// Show a circle.
+    eGaugeType_None,   /// Show only the text.
 };
 Q_DECLARE_METATYPE(PitikappGaugeType_e)
+
+/** ***************************************************************************************
+* @enum         PitikappBarGaugeOrientation_e
+*
+* @brief        Direction of a bar gauge.
+*******************************************************************************************/
+enum class PitikappBarGaugeDirection_e
+{
+    eBarGaugeDirection_Top,
+    eBarGaugeDirection_Right,
+    eBarGaugeDirection_Bottom,
+    eBarGaugeDirection_Left,
+};
+Q_DECLARE_METATYPE(PitikappBarGaugeDirection_e)
 
 /** ***************************************************************************************
 * @enum         GaugeValuePosition_e
@@ -40,8 +55,23 @@ enum class PitikappGaugeValuePosition_e
     eValuePos_Top,
     eValuePos_Center,
     eValuePos_Bottom,
+    eValuePos_Left,
+    eValuePos_Right,
 };
 Q_DECLARE_METATYPE(PitikappGaugeValuePosition_e)
+
+/** ***************************************************************************************
+* @enum         PitikappGaugeBackgroundType_e
+*
+* @brief        The type of background (the empty part of the gauge).
+*******************************************************************************************/
+enum class PitikappGaugeBackgroundType_e
+{
+    None,        /// No background. Only the filled part of the gauge is visible.
+    Default,     /// Automatic color depending on the theme (clear or dark).
+    CustomColor, /// User selected color.
+};
+Q_DECLARE_METATYPE(PitikappGaugeBackgroundType_e)
 
 /** ***************************************************************************************
 * @enum         PitikappGaugeParameter_e
@@ -51,12 +81,16 @@ Q_DECLARE_METATYPE(PitikappGaugeValuePosition_e)
 enum class PitikappGaugeParameter_e
 {
     GaugeType,         // Type: PitikappGaugeType_e              - Default: eGaugeType_Circle
+    BarDirection,      // Type: PitikappBarGaugeDirection_e      - Default: eBarGaugeDirection_Top
     HideUnit,          // Type: bool                             - Default: false
     TextFormat,        // Type: PitikappGaugeDisplayTextFormat_e - Default: eFormat_Percent
     DefaultColor,      // Type: QColor                           - Default: black
+    BackgroundType,    // Type: PitikappGaugeBackgroundType_e    - Default: Default
+    BackgroundColor,   // Type: QColor                           - Default: white
     BarWidth,          // Type: int (%)                          - Default: 30
     ValuePosition,     // Type: PitikappGaugeValuePosition_e     - Default: eValuePos_Center
-    ValueSize,         // Type: int                              - Default: 20
+    ValueHeight,       // Type: int                              - Default: 20
+    ValueWidth,        // Type: int                              - Default: 20
     MinValue,          // Type: int                              - Default: 0
     MaxValue,          // Type: int                              - Default: 100
     Warning1Enabled,   // Type: bool                             - Default: false
