@@ -55,7 +55,7 @@ include($$PWD/../lib/PitikappPluginLibrary.pri)
 DESTDIR=$$PWD/$$PLUGIN_NAME
 
 RESOURCES += \
-    resources.qrc
+    $$PWD/resources.qrc
 
 # --------------------------------------------
 # Lib required for some Windows.h functions.

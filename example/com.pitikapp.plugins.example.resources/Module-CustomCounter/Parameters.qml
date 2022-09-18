@@ -5,7 +5,7 @@ import QtQuick.Window 2.12
 
 import com.pitikapp.plugin.widgets 1.0
 
-Item
+ColumnLayout
 {
     readonly property int  __itemHeight: Math.min(Screen.height, Screen.width) / 40
 
@@ -24,11 +24,10 @@ Item
 
     ColumnLayout
     {
-        anchors.fill: parent
+        Layout.fillWidth: true
 
         ColumnLayout
         {
-            Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.maximumHeight: __itemHeight * 2
 

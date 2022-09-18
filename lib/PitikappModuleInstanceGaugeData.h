@@ -61,6 +61,18 @@ enum class PitikappGaugeValuePosition_e
 Q_DECLARE_METATYPE(PitikappGaugeValuePosition_e)
 
 /** ***************************************************************************************
+* @enum         PitikappGaugeValueColorType_e
+*
+* @brief        The color type of the value text.
+*******************************************************************************************/
+enum class PitikappGaugeValueColorType_e
+{
+    Default,
+    Custom
+};
+Q_DECLARE_METATYPE(PitikappGaugeValueColorType_e)
+
+/** ***************************************************************************************
 * @enum         PitikappGaugeBackgroundType_e
 *
 * @brief        The type of background (the empty part of the gauge).
@@ -74,31 +86,83 @@ enum class PitikappGaugeBackgroundType_e
 Q_DECLARE_METATYPE(PitikappGaugeBackgroundType_e)
 
 /** ***************************************************************************************
+* @enum         PitikappGaugeUnitDisplayMode_e
+*
+* @brief        What to display for the unit.
+*******************************************************************************************/
+enum class PitikappGaugeUnitDisplayMode_e
+{
+    Default, /// As provided by the module.
+    Custom,  /// Overwritten by the user.
+    None,    /// Do not show any unit.
+};
+Q_DECLARE_METATYPE(PitikappGaugeUnitDisplayMode_e)
+
+/** ***************************************************************************************
+* @enum         PitikappGaugeUnitVerticalAnchor_e
+*
+* @brief        How to vertically anchor the unit.
+*******************************************************************************************/
+enum class PitikappGaugeUnitVerticalAnchor_e
+{
+    Top,
+    Center,
+    Bottom
+};
+Q_DECLARE_METATYPE(PitikappGaugeUnitVerticalAnchor_e)
+
+/** ***************************************************************************************
+* @enum         PitikappGaugeUnitHorizontalAnchor_e
+*
+* @brief        How to horizontally anchor the unit.
+*******************************************************************************************/
+enum class PitikappGaugeUnitHorizontalAnchor_e
+{
+    Left,
+    Center,
+    Right
+};
+Q_DECLARE_METATYPE(PitikappGaugeUnitHorizontalAnchor_e)
+
+/** ***************************************************************************************
 * @enum         PitikappGaugeParameter_e
 *
 * @brief        All client parameters of a Pitikapp gauge.
 *******************************************************************************************/
 enum class PitikappGaugeParameter_e
 {
-    GaugeType,         // Type: PitikappGaugeType_e              - Default: eGaugeType_Circle
-    BarDirection,      // Type: PitikappBarGaugeDirection_e      - Default: eBarGaugeDirection_Top
-    HideUnit,          // Type: bool                             - Default: false
-    TextFormat,        // Type: PitikappGaugeDisplayTextFormat_e - Default: eFormat_Percent
-    DefaultColor,      // Type: QColor                           - Default: black
-    BackgroundType,    // Type: PitikappGaugeBackgroundType_e    - Default: Default
-    BackgroundColor,   // Type: QColor                           - Default: white
-    BarWidth,          // Type: int (%)                          - Default: 30
-    ValuePosition,     // Type: PitikappGaugeValuePosition_e     - Default: eValuePos_Center
-    ValueHeight,       // Type: int                              - Default: 20
-    ValueWidth,        // Type: int                              - Default: 20
-    MinValue,          // Type: int                              - Default: 0
-    MaxValue,          // Type: int                              - Default: 100
-    Warning1Enabled,   // Type: bool                             - Default: false
-    Warning1Threshold, // Type: int                              - Default: 60
-    Warning1Color,     // Type: QColor                           - Default: orange
-    Warning2Enabled,   // Type: bool                             - Default: false
-    Warning2Threshold, // Type: int                              - Default: 60
-    Warning2Color,     // Type: QColor                           - Default: red
+    // Gauge
+    GaugeType,         // Type: PitikappGaugeType_e                 - Default: eGaugeType_Circle
+    BarDirection,      // Type: PitikappBarGaugeDirection_e         - Default: eBarGaugeDirection_Top
+    DefaultColor,      // Type: QColor                              - Default: black
+    BackgroundType,    // Type: PitikappGaugeBackgroundType_e       - Default: Default
+    BackgroundColor,   // Type: QColor                              - Default: white
+    BarWidth,          // Type: int (%)                             - Default: 30
+
+    // Value
+    TextFormat,        // Type: PitikappGaugeDisplayTextFormat_e    - Default: eFormat_Percent
+    TextColorType,     // Type: PitikappGaugeValueColorType_e       - Default: Default
+    TextColor,         // Type: QColor                              - Default: black
+    ValuePosition,     // Type: PitikappGaugeValuePosition_e        - Default: eValuePos_Center
+    ValueHeight,       // Type: int                                 - Default: 20
+    ValueWidth,        // Type: int                                 - Default: 20
+    MinValue,          // Type: double                              - Default: 0
+    MaxValue,          // Type: double                              - Default: 100
+
+    // Unit
+    UnitDisplayMode,   // Type: PitikappGaugeUnitDisplayMode_e      - Default: Default
+    CustomUnit,        // Type: QString                             - Default: ""
+    UnitHeight,        // Type: int (%)                             - Default: 30
+    VerticalAnchor,    // Type: PitikappGaugeUnitVerticalAnchor_e   - Default: Top
+    HorizontalAnchor,  // Type: PitikappGaugeUnitHorizontalAnchor_e - Default: Right
+
+    // Thresholds
+    Warning1Enabled,   // Type: bool                                - Default: false
+    Warning1Threshold, // Type: int                                 - Default: 60
+    Warning1Color,     // Type: QColor                              - Default: orange
+    Warning2Enabled,   // Type: bool                                - Default: false
+    Warning2Threshold, // Type: int                                 - Default: 80
+    Warning2Color,     // Type: QColor                              - Default: red
 };
 
 class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceGaugeData : public PitikappModuleInstanceData
@@ -114,6 +178,7 @@ class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceGaugeData : public PitikappMo
         // Local parameters
         // ---------------------
         void setRangeModifiable(bool modifiable);
+        void setRangeSliderModifiable(bool modifiable);
         void setRangeMin(int min);
         void setRangeMax(int max);
 
@@ -138,10 +203,10 @@ class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceGaugeData : public PitikappMo
         // ---------------------
         // Client data
         // ---------------------
-        void setValue(int value);
+        void setValue(double value);
+        void setValuePercent(int value);
         void setTextValue(const QString &textValue);
         void setUnit(const QString &unit);
 
-    private:
         void setParameter(PitikappGaugeParameter_e param, const QVariant &value);
 };

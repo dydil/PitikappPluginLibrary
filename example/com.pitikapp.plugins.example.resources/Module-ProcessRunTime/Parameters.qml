@@ -5,7 +5,7 @@ import Qt.labs.platform 1.0
 import QtQuick.Window 2.3
 
 
-Item
+ColumnLayout
 {
              property bool __ready     : false
     readonly property int  __itemHeight: Math.min(Screen.height, Screen.width) / 40
@@ -27,12 +27,14 @@ Item
 
     ColumnLayout
     {
-        anchors.fill: parent
+        Layout.fillWidth: true
 
         spacing: 5
 
         ColumnLayout
         {
+            Layout.fillWidth: true
+
             spacing: 0
             Repeater
             {

@@ -28,9 +28,9 @@ The modules of a plugin are listed either in the information window or at the le
 
 # Requirements
 
-A plugin must be compiled using Qt 5.13.0 MSVC 2017 64 bits.
+A plugin must be compiled using Qt 5.13.0 MSVC 2017 64 bits in release mode. A debug plugin will not be loaded.
 
-This version of the library is intented to be used with Pitikapp 1.1.x.
+This version of the library is intented to be used with Pitikapp 1.4.x.
 
 # Global architecture
 
@@ -214,7 +214,7 @@ Default parameters:
 ```cpp
 m_data.setParameter(PitikappGaugeParameter_e::MinValue, 0);
 m_data.setParameter(PitikappGaugeParameter_e::MaxValue, 60);
-m_data.setParameter(PitikappGaugeParameter_e::HideUnit, true);
+m_data.setParameter(PitikappGaugeParameter_e::UnitDisplayMode, PitikappGaugeUnitDisplayMode_e::None);
 m_data.setParameter(PitikappGaugeParameter_e::TextFormat, PitikappGaugeDisplayTextFormat_e::eFormat_Absolute);
 ```
 
@@ -368,6 +368,12 @@ In the example, the widget uses those functions to set a flag to tell if the val
 
 In the example, the `onCurrentIndexChanged` method of `combobox_Alignment` is called with value 0 when the widget is being hidden. Without checking `if (__ready)` first, the alignment always returns to 0 (none) when hiding.
 
+**Parameter widget layout**
+Parameter widgets are layed out automatically. For a better experience, the following guidelines should be used when designing a parameter widget:
+- The root item of any parameter widget must be a `ColumnLayout` with no `Layout.fillWidth` or `Layout.fillHeight` values.
+- Child elements should be grouped in layouts with no height hint and `Layout.fillWidth: true`. Some margins can be added where necessary.
+- Each individual item should have a fixed height. It can be in pixels, or proportional to the screen size: `readonly property int itemHeight: Math.min(Screen.height, Screen.width) / 40`.
+
 #### 2.3.5 Data widget
 
 This widget shows information to the user. It is defined in the declaration of a `PitikappModuleDataInfo`.
@@ -454,7 +460,6 @@ Assigning this property will trigger a call to `PitikappModuleInstance::processD
 It takes as parameter a `QVariantMap` that contains the key that was assigned in the data widget. In the example, the `Terminate` key contains the ID of the process to be terminated. If the process is found, it will be killed.
 
 ### 2.4 Custom module embedding a predefined data type
-_This is available in Pitikapp 1.1.1_.
 
 It is also possible to use a predefined data type  but to customize it with addition parameters.
 
@@ -527,7 +532,7 @@ Here, all files are stored in a folder `com.pitikapp.plugins.example.resources` 
 
 About image format:
  - A plugin icon should be an image with a transparent background.
- - A module icon should be a black image with transparent background.
+ - A module icon should be a black image with a transparent background.
 
 ### 3.2 Logging
 
