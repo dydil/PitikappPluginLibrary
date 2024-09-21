@@ -15,7 +15,7 @@ ModuleCounter::ModuleCounter() : PitikappModuleInstance(&m_data)
     // --------------------------------------------------------------------------------------------
     m_data.setParameter(PitikappGaugeParameter_e::MinValue, 0);
     m_data.setParameter(PitikappGaugeParameter_e::MaxValue, 60);
-    m_data.setParameter(PitikappGaugeParameter_e::HideUnit, true);
+    m_data.setParameter(PitikappGaugeParameter_e::UnitDisplayMode, PitikappGaugeUnitDisplayMode_e::None);
     m_data.setParameter(PitikappGaugeParameter_e::TextFormat, PitikappGaugeDisplayTextFormat_e::eFormat_Absolute);
 }
 

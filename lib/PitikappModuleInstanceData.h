@@ -30,6 +30,9 @@ class PitikappModuleInstanceDataPrivate;
 *               A subclass of PitikappModuleInstanceData must be created for each type of data
 *               that will be used by the modules of a plugin. Predefined data types can also be
 *               used, such as PitikappModuleInstanceGaugeData.
+*
+*               When data is reloaded at application startup, onReload() is called.
+*               Override it for custom actions when data is reloaded (e.g. initialize resources).
 ***************************************************************************************************/
 class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceData
 {
@@ -40,6 +43,8 @@ class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceData
 
         PitikappModuleInstanceData(const QString &dataClassId);
         virtual ~PitikappModuleInstanceData();
+
+        virtual void onReload();
 
         const QString &classId() const;
 
@@ -60,6 +65,7 @@ class PITIKAPP_PLUGIN_EXPORT PitikappModuleInstanceData
         bool isDisplayTitleEditable();
 
         void setLocalTitle(const QString &title);
+        QString getLocalTitle() const;
 
     private:
         std::unique_ptr<PitikappModuleInstanceDataPrivate> data;

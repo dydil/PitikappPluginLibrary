@@ -24,13 +24,14 @@ Each plugin is made of one or more `modules`.
 The modules of a plugin are listed either in the information window or at the left of the screen.
 
 ![N|Solid](https://pitikapp.com/images/plugins/moduleList-Information.png)
+
 ![N|Solid](https://pitikapp.com/images/plugins/moduleList-AddModule.png)
 
 # Requirements
 
-A plugin must be compiled using Qt 5.13.0 MSVC 2017 64 bits.
+A plugin must be compiled using Qt 5.15.2 MSVC 2019 64 bits.
 
-This version of the library is intented to be used with Pitikapp 1.1.x.
+This version of the library is intented to be used with Pitikapp 1.5.x.
 
 # Global architecture
 
@@ -367,6 +368,13 @@ In the example, the widget uses those functions to set a flag to tell if the val
 **Important note**: some properties can change when the widget is hidden so it is important to ensure the widget is visible before changing a property.
 
 In the example, the `onCurrentIndexChanged` method of `combobox_Alignment` is called with value 0 when the widget is being hidden. Without checking `if (__ready)` first, the alignment always returns to 0 (none) when hiding.
+
+**Parameter widget layout**:
+
+Parameter widgets are layed out automatically. For a better experience, the following guidelines should be used when designing a parameter widget:
+- The root item of any parameter widget must be a `ColumnLayout` with no `Layout.fillWidth` or `Layout.fillHeight` values.
+- Child elements should be grouped in layouts with no height hint and `Layout.fillWidth: true`. Some margins can be added where necessary.
+- Each individual item should have a fixed height. It can be in pixels, or proportional to the screen size: `readonly property int itemHeight: Math.min(Screen.height, Screen.width) / 40`.
 
 #### 2.3.5 Data widget
 
