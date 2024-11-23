@@ -1,7 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.3
-import QtQuick.Window 2.3
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 
 Item {
     // The height of each line is based on the screen size.

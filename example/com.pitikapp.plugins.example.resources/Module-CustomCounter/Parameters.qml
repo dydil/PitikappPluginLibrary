@@ -1,11 +1,13 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
-import QtQuick.Window 2.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Basic
+import QtQuick.Layouts
+import QtQuick.Window
 
-import com.pitikapp.plugin.widgets 1.0
+import com.pitikapp.widgets // For spinbox
+import com.pitikapp.plugin.widgets // For gauge parameters
 
-Item
+ColumnLayout
 {
     readonly property int  __itemHeight: Math.min(Screen.height, Screen.width) / 40
 
@@ -24,40 +26,72 @@ Item
 
     ColumnLayout
     {
-        anchors.fill: parent
+        id: layout_Main
 
-        ColumnLayout
+        anchors.leftMargin: parent.width * 0.025
+        anchors.rightMargin: anchors.leftMargin
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        spacing: 10
+
+        Item
         {
-            Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.maximumHeight: __itemHeight * 2
+            Layout.fillHeight: true
+            Layout.minimumHeight: __itemHeight
+            Layout.maximumHeight: __itemHeight
 
-            Text
+            RowLayout
             {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.maximumHeight: __itemHeight
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                horizontalAlignment: Text.AlignHCenter
-                text: qsTr("Counter maximum value")
-                color: "white"
-            }
+                height: parent.height
+                width: parent.width / 2
 
-            SpinBox
-            {
-                id: spinbox_CounterMaxValue
+                uniformCellSizes: true
 
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.maximumHeight: __itemHeight
-                Layout.alignment: Qt.AlignHCenter
-                Layout.maximumWidth: root.width / 2
+                spacing: 10
 
-                onValueChanged:
+                Text
                 {
-                    if (visible)
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: (parent.width - parent.spacing) / 2
+                    Layout.maximumWidth: Layout.minimumWidth
+
+                    text: qsTr("Counter maximum value")
+                    color: "white"
+                    font.weight: Font.Light
+                    verticalAlignment: Qt.AlignVCenter
+                    horizontalAlignment: Qt.AlignRight
+                }
+
+                PitikappSpinBox
+                {
+                    id: spinbox_CounterMaxValue
+
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: (parent.width - parent.spacing) / 2
+
+                    from: 1
+                    to: 100
+
+                    editable: true
+
+                    onAccepted:
                     {
-                        moduleLocalParameters.CounterMaxValue = value;
+                        root.forceActiveFocus();
+                    }
+
+                    onValueChanged:
+                    {
+                        if (visible)
+                        {
+                            moduleLocalParameters.CounterMaxValue = value;
+                        }
                     }
                 }
             }

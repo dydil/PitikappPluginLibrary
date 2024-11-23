@@ -1,11 +1,14 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.12
-import Qt.labs.platform 1.0
-import QtQuick.Window 2.3
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Controls.Basic
+import Qt.labs.platform
+import QtQuick.Window
 
+// Import this to use basic widgets that have the same look and feel everywhere (checkbox, combobox, ...)
+import com.pitikapp.widgets
 
-Item
+ColumnLayout
 {
              property bool __ready     : false
     readonly property int  __itemHeight: Math.min(Screen.height, Screen.width) / 40
@@ -27,7 +30,9 @@ Item
 
     ColumnLayout
     {
-        anchors.fill: parent
+        Layout.fillWidth: true
+        Layout.maximumWidth: parent.width * 0.95
+        Layout.alignment: Qt.AlignHCenter
 
         spacing: 5
 
@@ -146,85 +151,98 @@ Item
         }
 
         // Show Names
-        Row
+        Item
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.maximumHeight: __itemHeight
             Layout.minimumHeight: __itemHeight
 
-            spacing: 0
-
-            Text
-            {
-                height: parent.height
-                width: parent.width / 2
-
-                text: qsTr("Show names")
-                color: "white"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
-            }
-
             RowLayout
             {
-                height: parent.height
-                width: parent.width / 2
+                anchors.fill: parent
 
-                CheckBox
+                spacing: 10
+
+                Item
                 {
-                    id: checkbox_ShowNames
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: (parent.width - parent.spacing) / 2
+                    Layout.maximumWidth: (parent.width - parent.spacing) / 2
 
-                    onCheckedChanged:
+                    Text
                     {
-                        moduleClientParameters.ShowNames = checked;
+                        anchors.fill: parent
+                        text: qsTr("Show names")
+                        color: "white"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: 13
                     }
                 }
 
                 Item
                 {
+                    Layout.fillHeight: true
                     Layout.fillWidth: true
+                    Layout.minimumWidth: (parent.width - parent.spacing) / 2
+                    Layout.maximumWidth: (parent.width - parent.spacing) / 2
+
+                    PitikappCheckBox
+                    {
+                        id: checkbox_ShowNames
+
+                        height: parent.height
+                        width: height
+
+                        onCheckedChanged:
+                        {
+                            moduleClientParameters.ShowNames = checked;
+                        }
+                    }
                 }
             }
         }
 
         // Alignment
-        Row
+        Item
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.maximumHeight: __itemHeight
             Layout.minimumHeight: __itemHeight
 
-            spacing: 0
-
-            Text
-            {
-                height: parent.height
-                width: parent.width / 2
-
-                text: qsTr("Alignment")
-                color: "white"
-                horizontalAlignment: Text.AlignRight
-                verticalAlignment: Text.AlignVCenter
-            }
-
             RowLayout
             {
-                height: parent.height
+                anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
+                height: parent.height
 
-                Layout.leftMargin: width * 0.1
+                spacing: 10
 
-                Item
+                Text
                 {
+                    Layout.fillHeight: true
                     Layout.fillWidth: true
-                    Layout.maximumWidth: __itemHeight / 8
+                    Layout.minimumWidth: (parent.width - parent.spacing) / 2
+                    Layout.maximumWidth: Layout.minimumWidth
+
+                    text: qsTr("Alignment")
+                    color: "white"
+                    font.weight: Font.Light
+                    verticalAlignment: Qt.AlignVCenter
+                    horizontalAlignment: Qt.AlignRight
                 }
 
-                ComboBox
+                PitikappCombobox
                 {
                     id: combobox_Alignment
+
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: (parent.width - parent.spacing) / 2
+                    Layout.maximumWidth: Layout.minimumWidth
 
                     model: [qsTr("None"), qsTr("Top"), qsTr("Center"), qsTr("Bottom")]
 
@@ -236,16 +254,8 @@ Item
                         }
                     }
                 }
-
-                Item
-                {
-                    Layout.fillWidth: true
-                }
             }
         }
-
-        // Align to the top
-        Item { Layout.fillHeight: true}
     }
 
     FileDialog

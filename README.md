@@ -29,7 +29,7 @@ The modules of a plugin are listed either in the information window or at the le
 
 # Requirements
 
-A plugin must be compiled using Qt 5.15.2 MSVC 2019 64 bits.
+A plugin must be compiled using Qt 6.7.3 MSVC 2022 64 bits.
 
 This version of the library is intented to be used with Pitikapp 1.5.x.
 
